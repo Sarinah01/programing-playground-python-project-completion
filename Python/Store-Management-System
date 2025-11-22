@@ -1,0 +1,108 @@
+store = {}        # Stores product info
+revenue = 0       # Total revenue
+
+def add_product():
+    name = input("Enter Product Name: ")
+    price = float(input("Enter Product Price: "))
+    qty = int(input("Enter Quantity: "))
+    if name in store:
+        store[name]['quantity'] += qty
+        store[name]['price'] = price  # update price if needed
+    else:
+        store[name] = {'price': price, 'quantity': qty}
+    print(f"Product '{name}' added/updated successfully!")
+
+def display_products():
+    if not store:
+        print("No products in store.")
+        return
+    print("\n--- Store Products ---")
+    for name, info in store.items():
+        print(f"Product: {name}, Price: {info['price']}, Quantity: {info['quantity']}")
+
+def sell_product():
+    global revenue
+    name = input("Enter Product Name to sell: ")
+    qty = int(input("Enter Quantity to sell: "))
+    
+    if name not in store:
+        print("Product not found!")
+        return
+    if store[name]['quantity'] < qty:
+        print("Insufficient stock!")
+        return
+    
+    store[name]['quantity'] -= qty
+    sale = store[name]['price'] * qty
+    revenue += sale
+    print(f"Sold {qty} units of '{name}' for {sale} currency units.")
+
+def update_product():
+    name = input("Enter Product Name to update: ")
+    if name not in store:
+        print("Product not found!")
+        return
+    price = input(f"Enter new price ({store[name]['price']}): ")
+    qty = input(f"Enter new quantity ({store[name]['quantity']}): ")
+    
+    if price:
+        store[name]['price'] = float(price)
+    if qty:
+        store[name]['quantity'] = int(qty)
+    print(f"Product '{name}' updated successfully!")
+
+def search_product():
+    name = input("Enter Product Name to search: ").lower()
+    found = False
+    for pname, info in store.items():
+        if pname.lower() == name:
+            print(f"Product: {pname}, Price: {info['price']}, Quantity: {info['quantity']}")
+            found = True
+    if not found:
+        print("Product not found!")
+
+def delete_product():
+    name = input("Enter Product Name to delete: ")
+    if name in store:
+        del store[name]
+        print(f"Product '{name}' deleted successfully!")
+    else:
+        print("Product not found!")
+
+def show_revenue():
+    print(f"Total Revenue: {revenue} currency units")
+
+# ---- Main Menu ----
+while True:
+    print("""
+--- Store / Inventory Management System ---
+1. Add Product
+2. Display Products
+3. Sell Product
+4. Update Product
+5. Search Product
+6. Delete Product
+7. Show Revenue
+8. Exit
+""")
+    choice = input("Enter your choice: ")
+    
+    if choice == '1':
+        add_product()
+    elif choice == '2':
+        display_products()
+    elif choice == '3':
+        sell_product()
+    elif choice == '4':
+        update_product()
+    elif choice == '5':
+        search_product()
+    elif choice == '6':
+        delete_product()
+    elif choice == '7':
+        show_revenue()
+    elif choice == '8':
+        print("Exiting system. Goodbye!")
+        break
+    else:
+        print("Invalid choice! Try again.")
